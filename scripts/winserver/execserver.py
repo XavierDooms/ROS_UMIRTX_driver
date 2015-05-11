@@ -1,4 +1,17 @@
 #!/usr/bin/env python
 import subprocess
+import sys, os
 
-subprocess.call(["wine", "/home/xavier/Documents/wine-tests/test2/RTX_Sturing_Win_Server.exe"])
+
+
+dirpath = os.path.dirname(os.path.realpath(__file__))+"/"
+print "Executing driver server"
+print "Path: ", dirpath
+
+#subprocess.call(["cd", dirpath])
+#subprocess.call(["pwd"])
+#subprocess.call(["wine", "RTX_Sturing_Win_Server.exe"])
+
+os.chdir(dirpath)
+serverfile = (dirpath + "RTX_Sturing_Win_Server.exe")
+subprocess.call(["wine", serverfile])
