@@ -107,7 +107,7 @@ class connect_module:
 		recvdata = []
 		dmod.conn_mod.transmsg(senddata,recvdata)
 		
-	def defineorigin(self)
+	def defineorigin(self):
 		print "Setting current position as origin"
 		senddata = [8, 0,0,0, 0,0,0,0]
 		recvdata = []

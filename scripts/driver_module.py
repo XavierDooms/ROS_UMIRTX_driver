@@ -65,7 +65,7 @@ class driver_mod:
 		
 		if (senddata == 20):
 			self.conn_mod.transmsg(senddata,recvdata)
-		else
+		else:
 			self.conn_mod.transmsg(senddata,recvdata)
 
 
