@@ -4,6 +4,7 @@ import rospy
 from std_msgs.msg import String
 import connect_module
 from functools import partial
+import time
 
 
 def requestcallback(dmod,rosdata):
@@ -30,7 +31,8 @@ class driver_mod:
 	def __init__(self):
 		self.zero = 0
 		
-		self.setup()
+		if(self.setup()!=0):
+			return 555
 		self.mainFunc()
 		
 	def setup(self):
@@ -40,10 +42,17 @@ class driver_mod:
 		
 		# setup connection
 		self.conn_mod = connect_module.connect_module(55632)
-		self.conn_mod.connect()
+		if(self.conn_mod.connect()!=0):
+			time.sleep(3)
+			if(self.conn_mod.connect()!=0):
+				time.sleep(5)
+				if(self.conn_mod.connect()!=0):
+					return 1
+				
 		
 		# init publication handler for update
 		self.pub = rospy.Publisher('StatusArm', String, queue_size=10)
+		return 0
 	
 	def mainFunc(self):
 		# subscribe to request channel

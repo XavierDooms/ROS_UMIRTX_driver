@@ -20,7 +20,7 @@ class connect_module:
 			port = self.port 
 		
 		try:
-			self.client_socket.connect(("127.0.0.1", 55632))
+			self.client_socket.connect(("127.0.0.1", port))
 			self.connected = True
 	
 		except socket.error:

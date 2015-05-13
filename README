@@ -1,1 +1,6 @@
 this is the README file for the robot driver of the UMI RT100+ robot arm
+
+to start the driver:
+roslaunch ros_umirtx_driver start.launch
+
+needs wine to function

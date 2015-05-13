@@ -1,0 +1,16 @@
+<launch>
+ <node 
+  pkg="ros_umirtx_driver"
+  name="winserver"
+  type="execserver.py"
+  launch-prefix="xterm -e"
+  respawn="true"
+ />
+ 
+ <node
+  pkg="ros_umirtx_driver"
+  name="drivermod"
+  type="driver_module.py"
+  required="true"
+ />
+</launch>
