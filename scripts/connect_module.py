@@ -22,7 +22,7 @@ class connect_module:
 		try:
 			self.client_socket.connect(("127.0.0.1", port))
 			self.connected = True
-	
+		
 		except socket.error:
 			print >>sys.stderr, 'Could not open socket', sys.exc_info()[0]
 			return 1;
@@ -47,7 +47,7 @@ class connect_module:
 		except:
 			print >>sys.stderr, "Error occured while communicating", sys.exc_info()[0]
 			
-
+		
 	def send(self,msgarray):
 		if self.connected != True:
 			self.connect()
@@ -80,37 +80,36 @@ class connect_module:
 			return 1
 		
 		data_in = self.packer.unpack(data_in_packed)
-		value_lst = []
+		while len(msgarray) > 0: msgarray.pop()
 		for x in data_in:
-			value_lst.append(socket.ntohs(x))
-		print 'received and unpacked:', value_lst
-		msgarray = value_lst
-		return value_lst
+			msgarray.append(socket.ntohs(x))
+		print 'received and unpacked:', msgarray
+		return msgarray
 		
 		
 		
-	def initserconn(self):
+	def initserconn(self,recvdata):
 		print 'Initialising serial connection'
 		senddata = [5, 0,0,0, 0,0,0,0]
-		recvdata = []
+		while len(recvdata) > 0: recvdata.pop() #clear list
 		dmod.conn_mod.transmsg(senddata,recvdata)
 		
-	def resetserconn(self):
+	def resetserconn(self,recvdata):
 		print 'Resetting serial connection'
 		senddata = [9, 0,0,0, 0,0,0,0]
-		recvdata = []
+		while len(recvdata) > 0: recvdata.pop() #clear list
 		dmod.conn_mod.transmsg(senddata,recvdata)
 		
-	def closeserconn(self):
+	def closeserconn(self,recvdata):
 		print "Closing serial connection"
 		senddata = [4, 0,0,0, 0,0,0,0]
-		recvdata = []
+		while len(recvdata) > 0: recvdata.pop() #clear list
 		dmod.conn_mod.transmsg(senddata,recvdata)
 		
-	def defineorigin(self):
+	def defineorigin(self,recvdata):
 		print "Setting current position as origin"
 		senddata = [8, 0,0,0, 0,0,0,0]
-		recvdata = []
+		while len(recvdata) > 0: recvdata.pop() #clear list
 		dmod.conn_mod.transmsg(senddata,recvdata)
 		
 		
@@ -122,8 +121,8 @@ if __name__ == '__main__':
         conn_mod = connect_module()
         conn_mod.connect()
         
-        conn_mod.send((25,0,0,0, 0,0,0,0))
         recvmsg = []
+        conn_mod.send((25,0,0,0, 0,0,0,0))
         conn_mod.recv(recvmsg)
         
     except rospy.ROSInterruptException:
