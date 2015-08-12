@@ -37,26 +37,26 @@ def statuscallback(dmod,event):
 		print "Service call failed: %s"%e
 		time.sleep(10)
 	
-def fillInMsg(respmsg,msg):
+def fillInMsg(respmsg,msg): #order is wrong TODO: rearrange
 	msgarray = list(respmsg)
 	msg.status   = msgarray[0]
-	msg.zed      = msgarray[1]
-	msg.shoulder = msgarray[2]
-	msg.elbow    = msgarray[3]
-	msg.yaw      = msgarray[4]
-	msg.wrist1   = msgarray[5]
-	msg.wrist2   = msgarray[6]
+	msg.shoulder = msgarray[1]
+	msg.elbow    = msgarray[2]
+	msg.zed      = msgarray[3]
+	msg.wrist1   = msgarray[4]
+	msg.wrist2   = msgarray[5]
+	msg.yaw      = msgarray[6]
 	msg.gripper  = msgarray[7]
 	
-def fillOutMsg(reqmsg,msglst):
+def fillOutMsg(reqmsg,msglst): #order is wrong TODO: rearrange
 	while len(msglst) > 0: msglst.pop() #clear list
 	msglst.append(reqmsg.status)
-	msglst.append(reqmsg.zed)
 	msglst.append(reqmsg.shoulder)
 	msglst.append(reqmsg.elbow)
-	msglst.append(reqmsg.yaw)
+	msglst.append(reqmsg.zed)
 	msglst.append(reqmsg.wrist1)
 	msglst.append(reqmsg.wrist2)
+	msglst.append(reqmsg.yaw)
 	msglst.append(reqmsg.gripper)
 	
 	
@@ -96,7 +96,7 @@ class driver_mod:
 	
 	def mainFunc(self):
 		# Request and publish status of robot periodicly
-		rospy.Timer(rospy.Duration(1), partial(statuscallback,self))
+		#rospy.Timer(rospy.Duration(1), partial(statuscallback,self))
 		
 		# Keeps from finishing program till shutdown signal is send
 		rospy.spin()

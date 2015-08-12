@@ -6,13 +6,21 @@ import socket
 import struct
 import sys
 
+def get_bit(byteval,idx):
+    return ((byteval&(1<<idx))!=0);
+
 class connect_module:
 	""" Connection module to communicate with UMIRTX robot server """
 	
 	def __init__(self,port = 55632):
 		self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		self.packer = struct.Struct('h h h h h h h h')
+		
+		self.packer = struct.Struct('H H H H H H H H')
+		#self.packer = struct.Struct('h h h h h h h h')
+		#self.unpacker = struct.Struct('h h h h h h h h')
+		
 		self.connected = False
+		self.ipadress = "127.0.0.1"
 		self.port = port
 		
 	def connect(self,port=0):
@@ -20,7 +28,7 @@ class connect_module:
 			port = self.port 
 		
 		try:
-			self.client_socket.connect(("127.0.0.1", port))
+			self.client_socket.connect((self.ipadress, port))
 			self.connected = True
 		
 		except socket.error:
@@ -54,8 +62,14 @@ class connect_module:
 		
 		value_lst = []
 		for x in msgarray:
-			value_lst.append(socket.htons(x))
+			val_out_masked = x & 0xffff
+			val_out_conv = socket.htons(val_out_masked)
+			if x<0:
+				val_out_conv2 = val_out_conv | ~0xffff #2??? TODO: check
+			value_lst.append(val_out_conv2)
+			
 		out_packed_data = self.packer.pack(*value_lst)
+		
 
 		try:
 			print "Sending"
@@ -80,11 +94,22 @@ class connect_module:
 			return 1
 		
 		data_in = self.packer.unpack(data_in_packed)
-		while len(msgarray) > 0: msgarray.pop()
+		
+		data_in_conv = []
 		for x in data_in:
-			msgarray.append(socket.ntohs(x))
-		print 'received and unpacked:', msgarray
-		return msgarray
+			val_in_conv = socket.ntohs(x)
+			if (val_in_conv > 32768):
+				val_in_conv2 = val_in_conv | ~0xffff
+			else:
+				val_in_conv2 = val_in_conv
+			#if (x != 0):
+			#    print >>sys.stderr, x, ": ",format(x,"#018b")
+			#    print >>sys.stderr, val_in_conv , ": ",format(val_in_conv ,"#018b")
+			#    print >>sys.stderr, val_in_conv2 , ": ",format(val_in_conv2 ,"#018b")                
+			data_in_conv.append(val_in_conv2)
+		
+		#print >>sys.stderr, 'received and unpacked:', data_in_conv
+		return data_in_conv
 		
 		
 		
