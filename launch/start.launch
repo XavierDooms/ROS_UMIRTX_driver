@@ -4,7 +4,7 @@
   name="winserver"
   type="execserver.py"
   launch-prefix="xterm -e"
-  respawn="true"
+  respawn="false"
  />
  
  <node

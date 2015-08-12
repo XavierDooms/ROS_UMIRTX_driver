@@ -6,7 +6,7 @@ import sys
 
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 try:
-	client_socket.connect(("127.0.0.1", 41586))
+	client_socket.connect(("127.0.0.1", 55632))
 	
 except socket.error:
         print >>sys.stderr, 'Could not open socket', sys.exc_info()[0]
