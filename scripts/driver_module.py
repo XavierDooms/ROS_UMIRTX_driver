@@ -18,7 +18,7 @@ def requestcallback(dmod,reqmsg):
 	recvdata = []
 	dmod.conn_mod.transmsg(senddata,recvdata)
 	
-	print "respons: ",recvdata[0]
+	print "respons: ",recvdata
 	respmsg = ArmRequestResponse()
 	fillInMsg(recvdata,respmsg.armresp)
 	
@@ -69,6 +69,7 @@ class driver_mod:
 		self.mainFunc()
 		
 	def setup(self):
+		print "Setting up"
 		# Define node name and refresh rate
 		rospy.init_node('robotdriver', anonymous=True)
 		#self.rate = rospy.Rate(1) # 1hz
@@ -76,9 +77,9 @@ class driver_mod:
 		# Setup connection
 		self.conn_mod = connect_module.connect_module(55632)
 		if(self.conn_mod.connect()!=0):
-			time.sleep(3)
+			time.sleep(4)
 			if(self.conn_mod.connect()!=0):
-				time.sleep(5)
+				time.sleep(6)
 				if(self.conn_mod.connect()!=0):
 					sys.exit()
 		
@@ -99,6 +100,7 @@ class driver_mod:
 		#rospy.Timer(rospy.Duration(1), partial(statuscallback,self))
 		
 		# Keeps from finishing program till shutdown signal is send
+		print "Spinning"
 		rospy.spin()
 
 	def executerequest(self,reqmsg,statmsg):

@@ -20,7 +20,8 @@ class connect_module:
 		#self.unpacker = struct.Struct('h h h h h h h h')
 		
 		self.connected = False
-		self.ipadress = "127.0.0.1"
+		#self.ipadress = "127.0.0.1"
+		self.ipadress = "192.168.56.1"
 		self.port = port
 		
 	def connect(self,port=0):
@@ -64,12 +65,12 @@ class connect_module:
 		for x in msgarray:
 			val_out_masked = x & 0xffff
 			val_out_conv = socket.htons(val_out_masked)
-			if x<0:
-				val_out_conv2 = val_out_conv | ~0xffff #2??? TODO: check
-			value_lst.append(val_out_conv2)
+			#if x<0:
+			#	val_out_conv2 = val_out_conv | ~0xffff #2??? TODO: check
+			value_lst.append(val_out_conv)
 			
 		out_packed_data = self.packer.pack(*value_lst)
-		
+		print "Sending: ",out_packed_data
 
 		try:
 			print "Sending"
@@ -82,8 +83,8 @@ class connect_module:
 		
 	
 	def recv(self,msgarray):
-		if self.connected != True:
-			self.connect()
+		#if self.connected != True:
+		#	self.connect()
 		
 		try:
 			print "Receiving"
@@ -92,22 +93,29 @@ class connect_module:
 			print >>sys.stderr, 'Unexpected error:', sys.exc_info()[0]
 			self.close()
 			return 1
+		print "Received"
 		
-		data_in = self.packer.unpack(data_in_packed)
 		
-		data_in_conv = []
-		for x in data_in:
-			val_in_conv = socket.ntohs(x)
-			if (val_in_conv > 32768):
-				val_in_conv2 = val_in_conv | ~0xffff
-			else:
-				val_in_conv2 = val_in_conv
-			#if (x != 0):
-			#    print >>sys.stderr, x, ": ",format(x,"#018b")
-			#    print >>sys.stderr, val_in_conv , ": ",format(val_in_conv ,"#018b")
-			#    print >>sys.stderr, val_in_conv2 , ": ",format(val_in_conv2 ,"#018b")                
-			data_in_conv.append(val_in_conv2)
-		
+		try:
+			data_in = self.packer.unpack(data_in_packed)
+			print "Unpacked: ",data_in
+			data_in_conv = []
+			for x in data_in:
+				val_in_conv = socket.ntohs(x)
+				if (val_in_conv > 32768):
+					val_in_conv2 = val_in_conv | ~0xffff
+				else:
+					val_in_conv2 = val_in_conv
+				#if (x != 0):
+				#    print >>sys.stderr, x, ": ",format(x,"#018b")
+				#    print >>sys.stderr, val_in_conv , ": ",format(val_in_conv ,"#018b")
+				#    print >>sys.stderr, val_in_conv2 , ": ",format(val_in_conv2 ,"#018b")                
+				data_in_conv.append(val_in_conv2)
+		except:
+			print >>sys.stderr, 'Unexpected error:', sys.exc_info()[0]
+			self.close()
+			return 1
+			
 		#print >>sys.stderr, 'received and unpacked:', data_in_conv
 		return data_in_conv
 		
