@@ -70,12 +70,12 @@ class connect_module:
 			value_lst.append(val_out_conv)
 			
 		out_packed_data = self.packer.pack(*value_lst)
-		print "Sending: ",out_packed_data
+		#print "Sending: ",out_packed_data
 
 		try:
-			print "Sending"
+			#print "Sending"
 			self.client_socket.sendall(out_packed_data)
-			print 'packed and send:', msgarray
+			#print 'packed and send:', msgarray
 		
 		except:
 			print >>sys.stderr, 'Unexpected error:', sys.exc_info()[0]
@@ -86,23 +86,26 @@ class connect_module:
 		#if self.connected != True:
 		#	self.connect()
 		
+		while len(msgarray) > 0: msgarray.pop() #empty array
+		
 		try:
-			print "Receiving"
+			#print "Receiving"
 			data_in_packed = self.client_socket.recv(self.packer.size)
 		except:
 			print >>sys.stderr, 'Unexpected error:', sys.exc_info()[0]
 			self.close()
 			return 1
-		print "Received"
+		#print "Received"
 		
 		
 		try:
 			data_in = self.packer.unpack(data_in_packed)
-			print "Unpacked: ",data_in
+			#print "Unpacked: ",data_in
+			
 			data_in_conv = []
 			for x in data_in:
 				val_in_conv = socket.ntohs(x)
-				if (val_in_conv > 32768):
+				if (val_in_conv > 32768): #negative number
 					val_in_conv2 = val_in_conv | ~0xffff
 				else:
 					val_in_conv2 = val_in_conv
@@ -111,6 +114,7 @@ class connect_module:
 				#    print >>sys.stderr, val_in_conv , ": ",format(val_in_conv ,"#018b")
 				#    print >>sys.stderr, val_in_conv2 , ": ",format(val_in_conv2 ,"#018b")                
 				data_in_conv.append(val_in_conv2)
+				msgarray.append(val_in_conv2)
 		except:
 			print >>sys.stderr, 'Unexpected error:', sys.exc_info()[0]
 			self.close()
