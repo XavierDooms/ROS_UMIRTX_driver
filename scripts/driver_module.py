@@ -26,7 +26,7 @@ def requestcallback(dmod,reqmsg):
 
 def statuscallback(dmod,event):
 	print "Posting status"
-	senddata = [25, 0,0,0, 0,0,0,0]
+	senddata = [36, 0,0,0, 0,0,0,0]
 	#senddata = [17, 0,0,0, 0,0,0,0]
 	reqmsg = ArmRequestRequest()
 	fillInMsg(senddata,reqmsg.armreq)

@@ -71,7 +71,7 @@ class connect_module:
 			
 		out_packed_data = self.packer.pack(*value_lst)
 		#print "Sending: ",out_packed_data
-
+		
 		try:
 			#print "Sending"
 			self.client_socket.sendall(out_packed_data)
@@ -102,6 +102,7 @@ class connect_module:
 			data_in = self.packer.unpack(data_in_packed)
 			#print "Unpacked: ",data_in
 			
+			#Convert from 16bit to system integer architecture(32 or 64bit) from network endianess to hw endianess
 			data_in_conv = []
 			for x in data_in:
 				val_in_conv = socket.ntohs(x)
@@ -127,13 +128,13 @@ class connect_module:
 		
 	def initserconn(self,recvdata):
 		print 'Initialising serial connection'
-		senddata = [5, 0,0,0, 0,0,0,0]
+		senddata = [16, 0,0,0, 0,0,0,0]
 		while len(recvdata) > 0: recvdata.pop() #clear list
 		dmod.conn_mod.transmsg(senddata,recvdata)
 		
 	def resetserconn(self,recvdata):
 		print 'Resetting serial connection'
-		senddata = [9, 0,0,0, 0,0,0,0]
+		senddata = [20, 0,0,0, 0,0,0,0]
 		while len(recvdata) > 0: recvdata.pop() #clear list
 		dmod.conn_mod.transmsg(senddata,recvdata)
 		
@@ -145,7 +146,7 @@ class connect_module:
 		
 	def defineorigin(self,recvdata):
 		print "Setting current position as origin"
-		senddata = [8, 0,0,0, 0,0,0,0]
+		senddata = [19, 0,0,0, 0,0,0,0]
 		while len(recvdata) > 0: recvdata.pop() #clear list
 		dmod.conn_mod.transmsg(senddata,recvdata)
 		
@@ -159,7 +160,7 @@ if __name__ == '__main__':
         conn_mod.connect()
         
         recvmsg = []
-        conn_mod.send((25,0,0,0, 0,0,0,0))
+        conn_mod.send((66,0,0,0, 0,0,0,0))
         conn_mod.recv(recvmsg)
         
     except rospy.ROSInterruptException:

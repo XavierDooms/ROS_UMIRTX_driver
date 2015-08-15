@@ -1,8 +1,8 @@
-int16 status
-int16 zed
-int16 shoulder
-int16 elbow
-int16 yaw
-int16 wrist1
-int16 wrist2
-int16 gripper
+int16 status = 0
+int16 shoulder = 0
+int16 elbow = 0
+int16 zed = 0
+int16 wrist1 = 0
+int16 wrist2 = 0
+int16 yaw = 0
+int16 gripper = 0
