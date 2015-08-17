@@ -40,8 +40,8 @@ def statuscallback(dmod,event):
 def fillInMsg(respmsg,msg): #order is wrong TODO: rearrange
 	msgarray = list(respmsg)
 	msg.status   = msgarray[0]
-	msg.shoulder = msgarray[1]
-	msg.elbow    = msgarray[2]
+	msg.elbow    = msgarray[1]
+	msg.shoulder = msgarray[2]
 	msg.zed      = msgarray[3]
 	msg.wrist1   = msgarray[4]
 	msg.wrist2   = msgarray[5]
@@ -51,8 +51,8 @@ def fillInMsg(respmsg,msg): #order is wrong TODO: rearrange
 def fillOutMsg(reqmsg,msglst): #order is wrong TODO: rearrange
 	while len(msglst) > 0: msglst.pop() #clear list
 	msglst.append(reqmsg.status)
-	msglst.append(reqmsg.shoulder)
 	msglst.append(reqmsg.elbow)
+	msglst.append(reqmsg.shoulder)
 	msglst.append(reqmsg.zed)
 	msglst.append(reqmsg.wrist1)
 	msglst.append(reqmsg.wrist2)
